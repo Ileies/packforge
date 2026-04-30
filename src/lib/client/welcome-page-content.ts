@@ -1,10 +1,4 @@
-import BookOpen from 'lucide-svelte/icons/book-open';
-import Database from 'lucide-svelte/icons/database';
-import FileCode from 'lucide-svelte/icons/file-code';
-import Library from 'lucide-svelte/icons/library';
-import PenLine from 'lucide-svelte/icons/pen-line';
-import Settings from 'lucide-svelte/icons/settings';
-import Wand2 from 'lucide-svelte/icons/wand-2';
+import { BookOpen, Database, FileCode, Library, PenLine, Settings, WandSparkles } from '@lucide/svelte';
 
 /** Interne Ziele der Welcome-Seite (für `resolve` aus `$app/paths`). */
 export type WelcomeAppPathname =
@@ -24,7 +18,7 @@ export type WelcomeAreaIcon =
 	| typeof Library
 	| typeof PenLine
 	| typeof Settings
-	| typeof Wand2;
+	| typeof WandSparkles;
 
 /** Nur Text für die Welcome-Seite — Navigation erfolgt über Kacheln / Sidebar (keine zweiten Links). */
 export type WelcomeWorkflowStep = {
@@ -51,8 +45,19 @@ export const WELCOME_WORKFLOW: readonly WelcomeWorkflowStep[] = [
 	}
 ];
 
+/** Schlüssel wie in `$lib/app/section-permissions` (Navigation / Zugriffskontrolle). */
+export type WelcomeAreaSection =
+	| 'software-library'
+	| 'script-maker'
+	| 'script-editor'
+	| 'template-editor'
+	| 'data-editor'
+	| 'stammdaten'
+	| 'settings';
+
 export type WelcomeArea = {
 	href: WelcomeAppPathname;
+	section: WelcomeAreaSection;
 	title: string;
 	desc: string;
 	Icon: WelcomeAreaIcon;
@@ -71,18 +76,21 @@ export const WELCOME_AREA_GROUPS: WelcomeAreaGroup[] = [
 		items: [
 			{
 				href: '/software-library',
+				section: 'software-library',
 				title: 'Software-Bibliothek',
 				desc: 'Alle angelegten Pakete, Export als PSADT-ZIP, Aufräumen.',
 				Icon: Library
 			},
 			{
 				href: '/script-maker',
+				section: 'script-maker',
 				title: 'Script Maker',
 				desc: 'Neues Paket aus Installer-Dateien und Vorlage erzeugen.',
-				Icon: Wand2
+				Icon: WandSparkles
 			},
 			{
 				href: '/script-editor',
+				section: 'script-editor',
 				title: 'Script-Editor',
 				desc: 'Deploy-Skripte zu bestehender Software bearbeiten.',
 				Icon: FileCode
@@ -95,18 +103,21 @@ export const WELCOME_AREA_GROUPS: WelcomeAreaGroup[] = [
 		items: [
 			{
 				href: '/template-editor',
+				section: 'template-editor',
 				title: 'Template-Editor',
 				desc: 'Vorlagen-Versionen und Textbausteine pflegen.',
 				Icon: BookOpen
 			},
 			{
 				href: '/data-editor',
+				section: 'data-editor',
 				title: 'Daten-Editor',
 				desc: 'Formularfelder und Eingaben für Pakete definieren.',
 				Icon: PenLine
 			},
 			{
 				href: '/stammdaten',
+				section: 'stammdaten',
 				title: 'Stammdaten',
 				desc: 'Alle Pakete tabellarisch mit Hersteller, Name und Version — ergänzt die Kartenansicht der Bibliothek.',
 				Icon: Database
@@ -119,6 +130,7 @@ export const WELCOME_AREA_GROUPS: WelcomeAreaGroup[] = [
 		items: [
 			{
 				href: '/settings',
+				section: 'settings',
 				title: 'Einstellungen',
 				desc: 'KI-Anbieter, API-Schlüssel und Umgebungsoptionen.',
 				Icon: Settings

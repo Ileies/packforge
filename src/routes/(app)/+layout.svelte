@@ -1,18 +1,27 @@
 <script lang="ts">
-	import Package from 'lucide-svelte/icons/package';
+	import { Package } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { PRODUCT_NAME, THEME_STORAGE_KEY } from '$lib/app/brand';
 	import { apiRoutes } from '$lib/client/api-routes';
-	import { clearSessionUser, type SessionUser, setSessionUser } from '$lib/client/session-user';
+	import { userMayAccessPathnameWithPerms } from '$lib/client/section-access';
+	import { clearSessionUser, type SessionUser, sessionUser, setSessionUser } from '$lib/client/session-user';
 	import AppShell from '$lib/components/app-shell.svelte';
 
 	let { data, children } = $props();
 
 	/** Bis Session (`apiRoutes.auth.me`) geklärt ist: keine leere Shell ohne Nav-Kontext. */
 	let sessionGate = $state<'loading' | 'ready'>('loading');
+
+	const routeAllowed = $derived(userMayAccessPathnameWithPerms(page.url.pathname, $sessionUser?.permissions));
+
+	$effect(() => {
+		if (!browser || sessionGate !== 'ready' || routeAllowed) return;
+		void goto('/welcome', { replaceState: true });
+	});
 
 	onMount(async () => {
 		if (browser) {
@@ -70,6 +79,17 @@
 	</div>
 {:else}
 	<AppShell helpLinks={data.helpLinks} openPortfolioDemo={data.openPortfolioDemo}>
-		{@render children()}
+		{#if routeAllowed}
+			{@render children()}
+		{:else}
+			<div
+				class="app-main-surface text-muted-foreground flex min-h-0 flex-1 flex-col items-center justify-center gap-2 px-4 py-16 text-center text-sm"
+				aria-busy="true"
+				aria-live="polite"
+			>
+				<p>Kein Zugriff auf diesen Bereich.</p>
+				<p class="text-muted-foreground/80 text-xs">Weiterleitung zum Start …</p>
+			</div>
+		{/if}
 	</AppShell>
 {/if}

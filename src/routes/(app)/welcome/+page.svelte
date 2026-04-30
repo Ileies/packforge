@@ -1,11 +1,17 @@
 <script lang="ts">
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
+	import { ArrowRight, Lock } from '@lucide/svelte';
 
 	import { resolve } from '$app/paths';
 	import { APP_PAGE_SHELL_CLASS } from '$lib/app/app-page-shell';
 	import { PRODUCT_NAME } from '$lib/app/brand';
+	import { userMayAccessSectionWithPerms } from '$lib/client/section-access';
+	import { sessionUser } from '$lib/client/session-user';
 	import { WELCOME_AREA_GROUPS, WELCOME_WORKFLOW } from '$lib/client/welcome-page-content';
 	import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '$lib/components/ui/card/index';
+
+	function mayAccessSection(section: string): boolean {
+		return userMayAccessSectionWithPerms(section, $sessionUser?.permissions);
+	}
 </script>
 
 <svelte:head>
@@ -64,35 +70,68 @@
 				</div>
 				<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
 					{#each g.items as item (item.href)}
-						<a
-							href={resolve(item.href)}
-							class="group border-border bg-card hover:border-primary/40 hover:shadow-md focus-visible:ring-ring flex h-full min-h-0 flex-col rounded-xl border transition-all focus-visible:ring-[3px] focus-visible:outline-none"
-						>
-							<Card class="border-0 shadow-none ring-0 flex min-h-0 flex-1 flex-col gap-0 py-0">
-								<CardHeader class="flex flex-1 flex-col pt-4 pb-2">
-									<div
-										class="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-lg"
+						{@const allowed = mayAccessSection(item.section)}
+						{#if allowed}
+							<a
+								href={resolve(item.href)}
+								class="group border-border bg-card shadow-none hover:border-primary/40 focus-visible:ring-ring flex h-full min-h-0 flex-col rounded-xl border transition-all focus-visible:ring-[3px] focus-visible:outline-none"
+							>
+								<Card class="border-0 shadow-none ring-0 flex min-h-0 flex-1 flex-col gap-0 py-0">
+									<CardHeader class="flex flex-1 flex-col pt-4 pb-2">
+										<div
+											class="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-lg"
+										>
+											<item.Icon class="size-5" aria-hidden="true" />
+										</div>
+										<CardTitle
+											class="text-foreground group-hover:text-primary pt-1 text-base transition-colors"
+										>
+											{item.title}
+										</CardTitle>
+										<CardDescription class="leading-relaxed">{item.desc}</CardDescription>
+									</CardHeader>
+									<CardContent
+										class="text-primary mt-auto flex items-center gap-1 pb-4 pt-1 text-sm font-medium"
 									>
-										<item.Icon class="size-5" aria-hidden="true" />
-									</div>
-									<CardTitle
-										class="text-foreground group-hover:text-primary pt-1 text-base transition-colors"
-									>
-										{item.title}
-									</CardTitle>
-									<CardDescription class="leading-relaxed">{item.desc}</CardDescription>
-								</CardHeader>
-								<CardContent
-									class="text-primary mt-auto flex items-center gap-1 pb-4 pt-1 text-sm font-medium"
+										Bereich öffnen
+										<ArrowRight
+											class="size-4 transition-transform group-hover:translate-x-0.5"
+											aria-hidden="true"
+										/>
+									</CardContent>
+								</Card>
+							</a>
+						{:else}
+							<div
+								class="border-border bg-card text-card-foreground flex h-full min-h-0 cursor-not-allowed flex-col rounded-xl border shadow-none select-none"
+								role="group"
+								aria-disabled="true"
+								aria-label="{item.title}: in dieser Sitzung nicht verfügbar"
+								tabindex="-1"
+							>
+								<Card
+									class="border-0 bg-card text-card-foreground shadow-none ring-0 flex min-h-0 flex-1 flex-col gap-0 py-0"
 								>
-									Bereich öffnen
-									<ArrowRight
-										class="size-4 transition-transform group-hover:translate-x-0.5"
-										aria-hidden="true"
-									/>
-								</CardContent>
-							</Card>
-						</a>
+									<CardHeader class="flex flex-1 flex-col pt-4 pb-2">
+										<div
+											class="bg-muted text-muted-foreground flex size-10 shrink-0 items-center justify-center rounded-lg"
+										>
+											<Lock class="size-4" aria-hidden="true" />
+										</div>
+										<CardTitle class="text-muted-foreground pt-1 text-base font-medium">
+											{item.title}
+										</CardTitle>
+										<CardDescription class="text-muted-foreground leading-relaxed">{item.desc}</CardDescription>
+									</CardHeader>
+									<CardContent
+										class="text-muted-foreground mt-auto flex items-center gap-1.5 pb-4 pt-1 text-sm font-medium"
+									>
+										<Lock class="size-3.5 shrink-0" aria-hidden="true" />
+										Nicht verfügbar
+									</CardContent>
+								</Card>
+							</div>
+						{/if}
 					{/each}
 				</div>
 			</section>

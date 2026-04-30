@@ -1,23 +1,25 @@
 <script lang="ts">
-	import BookOpen from 'lucide-svelte/icons/book-open';
-	import Database from 'lucide-svelte/icons/database';
-	import FileCode from 'lucide-svelte/icons/file-code';
-	import LayoutDashboard from 'lucide-svelte/icons/layout-dashboard';
-	import Library from 'lucide-svelte/icons/library';
-	import PenLine from 'lucide-svelte/icons/pen-line';
-	import Settings from 'lucide-svelte/icons/settings';
-	import Wand2 from 'lucide-svelte/icons/wand-2';
+	import {
+		BookOpen,
+		Database,
+		FileCode,
+		LayoutDashboard,
+		Library,
+		PenLine,
+		Settings,
+		WandSparkles
+	} from '@lucide/svelte';
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
 
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { THEME_STORAGE_KEY } from '$lib/app/brand';
-	import { SECTION_PERMISSIONS } from '$lib/app/section-permissions';
 	import { authHeaders } from '$lib/client/api-fetch';
 	import { apiRoutes } from '$lib/client/api-routes';
-	import { clearAuth, hasPermission, sessionUser } from '$lib/client/session-user';
+	import { userMayAccessSectionWithPerms } from '$lib/client/section-access';
+	import { clearAuth, sessionUser } from '$lib/client/session-user';
 	import AppCommandPalette from '$lib/components/app-command-palette.svelte';
 	import AppDirtyNavDialog from '$lib/components/app-dirty-nav-dialog.svelte';
 	import AppShellDesktopSidebar from '$lib/components/app-shell-desktop-sidebar.svelte';
@@ -47,7 +49,7 @@
 					section: 'software-library',
 					Icon: Library
 				},
-				{ href: '/script-maker', label: 'Script Maker', section: 'script-maker', Icon: Wand2 },
+				{ href: '/script-maker', label: 'Script Maker', section: 'script-maker', Icon: WandSparkles },
 				{ href: '/script-editor', label: 'Script-Editor', section: 'script-editor', Icon: FileCode }
 			]
 		},
@@ -168,13 +170,11 @@
 	});
 
 	function canSee(section: string) {
-		const req = SECTION_PERMISSIONS[section];
-		if (!req?.length) return true;
-		return req.some((permission) => hasPermission(permission));
+		return userMayAccessSectionWithPerms(section, $sessionUser?.permissions);
 	}
 
 	function linkActive(href: string): boolean {
-		return $page.url.pathname === href;
+		return page.url.pathname === href;
 	}
 
 	function navLinkClass(href: string): string {
@@ -295,7 +295,7 @@
 							</div>
 							<div class="flex justify-between gap-4">
 								<dt><kbd class="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">Esc</kbd></dt>
-								<dd class="max-w-[14rem] text-right">
+								<dd class="max-w-56 text-right">
 									Offenes Seitenpanel schließen (Shortcuts, Mobil-Menü), wenn der Fokus nicht im Editor liegt
 								</dd>
 							</div>
@@ -315,7 +315,7 @@
 									<span class="text-muted-foreground/80 mx-1">/</span>
 									<kbd class="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">⌘F</kbd>
 								</dt>
-								<dd class="max-w-[14rem] text-right">Suche im Skript / in der Vorlage</dd>
+								<dd class="max-w-56 text-right">Suche im Skript / in der Vorlage</dd>
 							</div>
 							<div class="flex justify-between gap-4 border-b border-dashed pb-3">
 								<dt>
@@ -323,11 +323,11 @@
 									<span class="text-muted-foreground/80 mx-1">/</span>
 									<kbd class="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">⌥⌘F</kbd>
 								</dt>
-								<dd class="max-w-[14rem] text-right">Ersetzen (wenn die Editor-Suche aktiv ist)</dd>
+								<dd class="max-w-56 text-right">Ersetzen (wenn die Editor-Suche aktiv ist)</dd>
 							</div>
 							<div class="flex justify-between gap-4">
 								<dt><kbd class="bg-muted rounded px-1.5 py-0.5 font-mono text-xs">Esc</kbd></dt>
-								<dd class="max-w-[14rem] text-right">Offene Editor-Suche oder Ersetzen-Dialog schließen</dd>
+								<dd class="max-w-56 text-right">Offene Editor-Suche oder Ersetzen-Dialog schließen</dd>
 							</div>
 						</dl>
 					</section>
