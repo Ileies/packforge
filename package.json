@@ -60,7 +60,7 @@
 		"clsx": "^2.1.1",
 		"dotenv": "^17.4.2",
 		"drizzle-kit": "1.0.0-beta.21",
-		"drizzle-orm": "1.0.0-beta.21",
+		"drizzle-orm": "1.0.0-beta.23",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
