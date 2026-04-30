@@ -4,12 +4,12 @@
 	"version": "1.0.0",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ileies/packforge.git"
+		"url": "https://github.com/Ileies/packforge.git"
 	},
 	"bugs": {
-		"url": "https://github.com/ileies/packforge/issues"
+		"url": "https://github.com/Ileies/packforge/issues"
 	},
-	"homepage": "https://github.com/ileies/packforge#readme",
+	"homepage": "https://github.com/Ileies/packforge#readme",
 	"type": "module",
 	"engines": {
 		"node": ">=20.10.0",
