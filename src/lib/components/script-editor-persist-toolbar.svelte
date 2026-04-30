@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Loader from 'lucide-svelte/icons/loader';
+	import { Loader } from '@lucide/svelte';
 
 	import type { PersistStatusPresentation } from '$lib/client/script-editor-page.controller';
 	import { Button } from '$lib/components/ui/button/index';

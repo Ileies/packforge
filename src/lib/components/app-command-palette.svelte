@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Command, Dialog } from 'bits-ui';
-	import XIcon from 'lucide-svelte/icons/x';
+	import { X as XIcon } from '@lucide/svelte';
 
 	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button/index';

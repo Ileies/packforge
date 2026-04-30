@@ -1,7 +1,5 @@
 <script lang="ts">
-	import LogIn from 'lucide-svelte/icons/log-in';
-	import LogOut from 'lucide-svelte/icons/log-out';
-	import Package from 'lucide-svelte/icons/package';
+	import { LogIn, LogOut, Package } from '@lucide/svelte';
 
 	import { PRODUCT_NAME } from '$lib/app/brand';
 	import AppShellGithubFooterLink from '$lib/components/app-shell-github-footer-link.svelte';

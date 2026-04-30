@@ -1,6 +1,5 @@
 <script lang="ts">
-	import ArrowDown from 'lucide-svelte/icons/arrow-down';
-	import ArrowUp from 'lucide-svelte/icons/arrow-up';
+	import { ArrowDown, ArrowUp } from '@lucide/svelte';
 	import { onMount, untrack } from 'svelte';
 	import { SvelteURLSearchParams } from 'svelte/reactivity';
 

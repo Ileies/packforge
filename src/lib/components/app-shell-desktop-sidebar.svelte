@@ -1,11 +1,5 @@
 <script lang="ts">
-	import Keyboard from 'lucide-svelte/icons/keyboard';
-	import LogIn from 'lucide-svelte/icons/log-in';
-	import LogOut from 'lucide-svelte/icons/log-out';
-	import Moon from 'lucide-svelte/icons/moon';
-	import Package from 'lucide-svelte/icons/package';
-	import Search from 'lucide-svelte/icons/search';
-	import Sun from 'lucide-svelte/icons/sun';
+	import { Keyboard, LogIn, LogOut, Moon, Package, Search, Sun } from '@lucide/svelte';
 
 	import { PRODUCT_NAME } from '$lib/app/brand';
 	import AppShellGithubFooterLink from '$lib/components/app-shell-github-footer-link.svelte';

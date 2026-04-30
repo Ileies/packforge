@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Loader from 'lucide-svelte/icons/loader';
+	import { Loader } from '@lucide/svelte';
 	import { onMount, untrack } from 'svelte';
 	import { SvelteURLSearchParams } from 'svelte/reactivity';
 

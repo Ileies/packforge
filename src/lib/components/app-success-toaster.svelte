@@ -1,5 +1,5 @@
 <script lang="ts">
-	import XIcon from 'lucide-svelte/icons/x';
+	import { X as XIcon } from '@lucide/svelte';
 
 	import { dismissSuccessToast, successToasts } from '$lib/client/success-toast';
 	import { Button } from '$lib/components/ui/button/index';

@@ -1,10 +1,5 @@
 <script lang="ts">
-	import Keyboard from 'lucide-svelte/icons/keyboard';
-	import LogIn from 'lucide-svelte/icons/log-in';
-	import Menu from 'lucide-svelte/icons/menu';
-	import Moon from 'lucide-svelte/icons/moon';
-	import Search from 'lucide-svelte/icons/search';
-	import Sun from 'lucide-svelte/icons/sun';
+	import { Keyboard, LogIn, Menu, Moon, Search, Sun } from '@lucide/svelte';
 
 	import AppGithubRepoLink from '$lib/components/app-github-repo-link.svelte';
 	import { Button } from '$lib/components/ui/button/index';

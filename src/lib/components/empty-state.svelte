@@ -1,9 +1,5 @@
 <script lang="ts">
-	import Database from 'lucide-svelte/icons/database';
-	import FileCode from 'lucide-svelte/icons/file-code';
-	import History from 'lucide-svelte/icons/history';
-	import Package from 'lucide-svelte/icons/package';
-	import Search from 'lucide-svelte/icons/search';
+	import { Database, FileCode, History, Package, Search } from '@lucide/svelte';
 	import type { Snippet } from 'svelte';
 
 	import { cn } from '$lib/utils';

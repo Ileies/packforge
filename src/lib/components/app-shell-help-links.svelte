@@ -1,6 +1,5 @@
 <script lang="ts">
-	import ChevronDown from 'lucide-svelte/icons/chevron-down';
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import { ChevronDown, ExternalLink } from '@lucide/svelte';
 
 	import type { HelpLink } from '$lib/types/help-link';
 

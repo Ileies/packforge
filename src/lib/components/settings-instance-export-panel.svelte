@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Loader from 'lucide-svelte/icons/loader';
+	import { Loader } from '@lucide/svelte';
 
 	import { type ApiErrorSurface, msgErr } from '$lib/client/api-error-present';
 	import { authHeaders, parseFailedResponse } from '$lib/client/api-fetch';

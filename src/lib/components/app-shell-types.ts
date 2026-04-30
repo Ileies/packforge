@@ -1,4 +1,6 @@
-export type IconComponent = typeof import('lucide-svelte/icons/library').default;
+import type { Library } from '@lucide/svelte';
+
+export type IconComponent = typeof Library;
 
 export type NavItem = {
 	href: string;

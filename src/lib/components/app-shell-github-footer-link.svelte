@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ExternalLink from 'lucide-svelte/icons/external-link';
+	import { ExternalLink } from '@lucide/svelte';
 
 	import { PRODUCT_GITHUB_REPO_URL } from '$lib/app/brand';
 	import { cn } from '$lib/utils';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Package from 'lucide-svelte/icons/package';
+	import { Package } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
 	import { goto } from '$app/navigation';
