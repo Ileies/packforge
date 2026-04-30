@@ -9,7 +9,7 @@
 	"bugs": {
 		"url": "https://github.com/Ileies/packforge/issues"
 	},
-	"homepage": "https://github.com/Ileies/packforge#readme",
+	"homepage": "https://packforge.ileies.de",
 	"type": "module",
 	"engines": {
 		"node": ">=20.10.0",
