@@ -1,0 +1,1141 @@
+# PackForge — HTTP-API (OpenAPI 3.1)
+# Prosa, Tabellen, Konventionen: docs/api.md. Wichtige /api/*-Routen für Integratoren; bei neuen Endpunkten nachziehen.
+
+openapi: 3.1.0
+info:
+  title: PackForge API
+  version: 0.1.0
+  description: |
+    REST-artige Endpunkte unter `/api/*`. Session über HttpOnly-Cookie `authToken` (kein Bearer im Web-Client).
+    Mutierende Aufrufe (außer laut `csrf-paths.ts` ausgenommene Login-POSTs) brauchen CSRF Double-Submit:
+    Cookie `packforge_csrf` und Header `X-CSRF-Token` (Wert von `GET /api/csrf-token`).
+
+servers:
+  - url: /
+    description: Relativ zur App-Origin (z. B. https://ihre-instanz.example)
+
+tags:
+  - name: public
+    description: Kein Session-JWT nötig (siehe api-public-paths)
+  - name: session
+    description: Session-pflichtig (Cookie authToken)
+  - name: software
+    description: Software-Bibliothek, Detail, Export, Checkpoints
+  - name: packages
+    description: Stammdaten (Legacy-Paketliste)
+  - name: formfields
+    description: Formularfelder (CRUD, Export/Import, Reihenfolge)
+  - name: templates
+    description: PSADT-Vorlagen
+  - name: admin
+    description: Administrative Vorgänge
+  - name: ai
+    description: KI-Hilfen und Modell-/Key-Verwaltung
+  - name: diagnostics
+    description: Lint und Systemmetadaten
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: authToken
+      description: HttpOnly JWT-Session (Web-Client sendet Cookie automatisch mit same-origin fetch).
+
+  parameters:
+    ViewQuery:
+      name: view
+      in: query
+      required: false
+      description: |
+        Payload-Projektion für Detail-GETs. Gültig u. a. full, detail, summary, minimal.
+        Ungültig → 400 mit code PF_INVALID_VIEW.
+      schema:
+        type: string
+        enum: [full, detail, summary, minimal]
+    SoftwareId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    PackageId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    TemplateId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    FormfieldId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    CheckpointNumber:
+      name: number
+      in: path
+      required: true
+      schema:
+        type: integer
+    MajorVersion:
+      name: majorVersion
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+    JsonError:
+      type: object
+      required: [error, code, docRef]
+      additionalProperties: true
+      properties:
+        error:
+          type: string
+          description: Kurztext für Menschen
+        code:
+          type: string
+          description: Stabiler Code (Präfix PF_)
+          example: PF_AUTH_REQUIRED
+        docRef:
+          type: string
+          description: Verweis auf Doku
+          example: docs/api.md#fehlerantwort-json
+
+    SoftwarePutBody:
+      type: object
+      required: [name, generatedScript]
+      properties:
+        name:
+          type: string
+        generatedScript:
+          type: string
+        version:
+          oneOf:
+            - type: string
+            - type: number
+        formData: {}
+
+    CheckpointPostBody:
+      type: object
+      required: [generatedScript]
+      properties:
+        generatedScript:
+          type: string
+        name:
+          type: string
+        comment:
+          type: string
+        author:
+          type: string
+
+    FormfieldsImportBody:
+      type: object
+      required: [formfields]
+      properties:
+        formfields:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        mode:
+          type: string
+          description: z. B. append (Standard)
+
+    FormfieldsReorderBody:
+      type: object
+      required: [orderedIds]
+      properties:
+        orderedIds:
+          type: array
+          items:
+            type: integer
+
+    TemplatePostBody:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+        majorVersion:
+          oneOf:
+            - type: integer
+            - type: string
+
+    PackagePutBody:
+      type: object
+      additionalProperties: true
+      description: Felder der Paketzeile (JSON-Objekt)
+
+    LintScriptBody:
+      type: object
+      properties:
+        script:
+          type: string
+
+    PowerShellLintProfileBody:
+      type: object
+      required: [profile]
+      properties:
+        profile:
+          type: string
+          enum: [strict, relaxed]
+
+    JsonSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+
+paths:
+  /api/csrf-token:
+    get:
+      tags: [public]
+      summary: CSRF-Cookie und Token für mutierende Requests
+      operationId: getCsrfToken
+      responses:
+        '200':
+          description: OK — setzt u. a. nicht-HttpOnly CSRF-Cookie
+        '204':
+          description: No Content (HEAD)
+
+  /api/auth/config:
+    get:
+      tags: [public]
+      summary: Öffentliche Auth-Konfiguration (z. B. MSAL)
+      operationId: getAuthConfig
+      responses:
+        '200':
+          description: JSON-Konfiguration
+
+  /api/auth/login:
+    post:
+      tags: [public]
+      summary: Login mit Microsoft-Access-Token
+      operationId: postAuthLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [accessToken]
+              properties:
+                accessToken:
+                  type: string
+      responses:
+        '200':
+          description: Session gesetzt
+        default:
+          description: Fehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/auth/dev-login:
+    post:
+      tags: [public]
+      summary: Dev-Login (nur wenn ALLOW_DEV_LOGIN gesetzt)
+      operationId: postAuthDevLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum: [Admin, Mitarbeiter, Besucher]
+                password:
+                  type: string
+                  description: Nur wenn DEV_LOGIN_PASSWORD gesetzt
+      responses:
+        '200':
+          description: Session gesetzt
+        '403':
+          description: Dev-Login deaktiviert
+        default:
+          description: Fehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/auth/me:
+    get:
+      tags: [session]
+      summary: Aktuelles Benutzerprofil
+      description: |
+        Mit gültiger Session: Profil wie bisher.
+        Ohne Session: **401**, außer `PUBLIC_OPEN_PORTFOLIO_MODE=true` — dann wird eine **Gast-Session** (`Set-Cookie`) ausgestellt und **200** mit eingeschränkten Rechten geliefert.
+      operationId: getAuthMe
+      security: []
+      responses:
+        '200':
+          description: Profil inkl. Berechtigungen (ggf. neu ausgestellte Gast-Session)
+        '401':
+          description: Nicht angemeldet und kein Portfolio-Gast-Modus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/auth/logout:
+    post:
+      tags: [session]
+      summary: Session beenden
+      operationId: postAuthLogout
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: OK
+
+  /api/software:
+    get:
+      tags: [session, software]
+      summary: Software-Bibliothek (Liste)
+      description: |
+        Ohne Query `limit` liefert die API die vollständige Kurzliste (Array).
+        Mit `limit` (1–100), `offset`, optional `search`, `sort` → Objekt `{ total, items }`.
+      operationId: listSoftware
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+            description: z. B. name_asc, created_desc
+      responses:
+        '200':
+          description: Liste oder paginiertes Objekt
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    post:
+      tags: [session, software]
+      summary: Neuen Software-Eintrag anlegen (multipart)
+      description: |
+        multipart/form-data mit u. a. Haupt-Setup (.exe/.msi), Name, generiertem Skript.
+        CSRF-Header erforderlich. Fehler u. a. PF_EXPECT_MULTIPART, PF_FILE_SIGNATURE, PF_NAME_SCRIPT_REQUIRED, 409 mit conflictSoftwareId.
+      operationId: createSoftware
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, name, generatedScript]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Haupt-Installer (.exe oder .msi)
+                name:
+                  type: string
+                generatedScript:
+                  type: string
+                version:
+                  type: string
+                formData:
+                  type: string
+                  description: JSON-serialisiert, je nach Client
+                templateId:
+                  type: string
+                additional:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                support:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          description: '{ success, id }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/software/{id}:
+    parameters:
+      - $ref: '#/components/parameters/SoftwareId'
+    get:
+      tags: [session, software]
+      summary: Software-Detail
+      operationId: getSoftwareById
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/ViewQuery'
+      responses:
+        '200':
+          description: Zeile; große Felder abhängig von view
+        '404':
+          description: PF_SOFTWARE_NOT_FOUND
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    put:
+      tags: [session, software]
+      summary: Software aktualisieren (last-write-wins)
+      operationId: putSoftwareById
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SoftwarePutBody'
+      responses:
+        '200':
+          description: '{ success: true }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    delete:
+      tags: [session, software]
+      summary: Software-Eintrag löschen
+      operationId: deleteSoftwareById
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: '{ success: true }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/software/{id}/export:
+    parameters:
+      - $ref: '#/components/parameters/SoftwareId'
+    post:
+      tags: [session, software]
+      summary: PSADT-ZIP-Export (Audit-Log)
+      operationId: postSoftwareExportZip
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: application/zip (Binärstrom)
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/software/{id}/checkpoints:
+    parameters:
+      - $ref: '#/components/parameters/SoftwareId'
+    get:
+      tags: [session, software]
+      summary: Checkpoints auflisten
+      operationId: listSoftwareCheckpoints
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: JSON-Array
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/software/{id}/checkpoint:
+    parameters:
+      - $ref: '#/components/parameters/SoftwareId'
+    post:
+      tags: [session, software]
+      summary: Neuen Checkpoint speichern
+      operationId: postSoftwareCheckpoint
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckpointPostBody'
+      responses:
+        '200':
+          description: '{ success, checkpointId, checkpointNumber }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/software/{id}/checkpoint/{number}:
+    parameters:
+      - $ref: '#/components/parameters/SoftwareId'
+      - $ref: '#/components/parameters/CheckpointNumber'
+    get:
+      tags: [session, software]
+      summary: Einzelnen Checkpoint lesen
+      operationId: getSoftwareCheckpoint
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Checkpoint-JSON
+        '404':
+          description: PF_CHECKPOINT_NOT_FOUND
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/software/{id}/checkpoint/{number}/restore:
+    parameters:
+      - $ref: '#/components/parameters/SoftwareId'
+      - $ref: '#/components/parameters/CheckpointNumber'
+    post:
+      tags: [session, software]
+      summary: Checkpoint wiederherstellen
+      operationId: postSoftwareCheckpointRestore
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: '{ success: true }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/packages:
+    get:
+      tags: [session, packages]
+      summary: Paketliste (Stammdaten)
+      operationId: listPackages
+      security:
+        - sessionCookie: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            maximum: 200
+        - name: offset
+          in: query
+          schema:
+            type: integer
+        - name: search1
+          in: query
+          schema:
+            type: string
+        - name: search2
+          in: query
+          schema:
+            type: string
+        - name: sortColumn
+          in: query
+          schema:
+            type: string
+        - name: sortDirection
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        '200':
+          description: '{ packages, total }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/packages/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PackageId'
+    get:
+      tags: [session, packages]
+      summary: Paket-Detail
+      operationId: getPackageById
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/ViewQuery'
+      responses:
+        '200':
+          description: Paketzeile
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    put:
+      tags: [session, packages]
+      summary: Paket aktualisieren
+      operationId: putPackageById
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PackagePutBody'
+      responses:
+        '200':
+          description: '{ success: true }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/formfields:
+    get:
+      tags: [session, formfields]
+      summary: Alle Formularfelder
+      operationId: listFormfields
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: JSON-Array
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    post:
+      tags: [session, formfields]
+      summary: Formularfeld anlegen
+      operationId: postFormfield
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Siehe Server-Schema formfieldUpsertBodySchema / docs/api.md
+      responses:
+        '200':
+          description: Erfolg
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/formfields/{id}:
+    parameters:
+      - $ref: '#/components/parameters/FormfieldId'
+    get:
+      tags: [session, formfields]
+      summary: Formularfeld nach ID
+      operationId: getFormfieldById
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Feld
+        '404':
+          description: PF_FORMFIELD_NOT_FOUND
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    put:
+      tags: [session, formfields]
+      summary: Formularfeld aktualisieren
+      operationId: putFormfieldById
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: '{ success: true }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    delete:
+      tags: [session, formfields]
+      summary: Formularfeld löschen (keine Systemfelder)
+      operationId: deleteFormfieldById
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: '{ success: true }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/formfields/export:
+    get:
+      tags: [session, formfields]
+      summary: Formularfelder als JSON exportieren
+      operationId: getFormfieldsExport
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: application/json Download
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/formfields/import:
+    post:
+      tags: [session, formfields]
+      summary: Formularfelder importieren
+      operationId: postFormfieldsImport
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormfieldsImportBody'
+      responses:
+        '200':
+          description: Zusammenfassung Import
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/formfields/reorder:
+    post:
+      tags: [session, formfields]
+      summary: Sortierreihenfolge speichern
+      operationId: postFormfieldsReorder
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormfieldsReorderBody'
+      responses:
+        '200':
+          description: '{ success: true }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/templates:
+    get:
+      tags: [session, templates]
+      summary: Vorlagenliste (Kurzinfos)
+      operationId: listTemplates
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: JSON-Array
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    post:
+      tags: [session, templates]
+      summary: Neue Vorlage anlegen
+      operationId: postTemplate
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplatePostBody'
+      responses:
+        '200':
+          description: '{ success, id, majorVersion, minorVersion }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/templates/{id}:
+    parameters:
+      - $ref: '#/components/parameters/TemplateId'
+    get:
+      tags: [session, templates]
+      summary: Vorlage nach ID
+      operationId: getTemplateById
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/ViewQuery'
+      responses:
+        '200':
+          description: Vorlage; content abhängig von view
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/templates/next-minor/{majorVersion}:
+    parameters:
+      - $ref: '#/components/parameters/MajorVersion'
+    get:
+      tags: [session, templates]
+      summary: Nächste Minor-Version für Major
+      operationId: getTemplateNextMinor
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: '{ nextMinorVersion }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/admin/instance-export:
+    post:
+      tags: [session, admin]
+      summary: Vollständiger Instanz-Export (ZIP, auditgeloggt)
+      operationId: postAdminInstanceExport
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: application/zip
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/system-fields:
+    get:
+      tags: [session, diagnostics]
+      summary: System-Felder-Metadaten (Daten-Editor)
+      operationId: getSystemFields
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: JSON
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/script/lint:
+    post:
+      tags: [session, diagnostics]
+      summary: PowerShell-Skript heuristisch + optional PSScriptAnalyzer
+      operationId: postScriptLint
+      security:
+        - sessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LintScriptBody'
+      responses:
+        '200':
+          description: Befunde / Metadaten
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/settings/powershell-lint-profile:
+    get:
+      tags: [session, diagnostics]
+      summary: Aktuelles Lint-Profil lesen
+      operationId: getPowerShellLintProfile
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: '{ profile }'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+    post:
+      tags: [session, diagnostics]
+      summary: Lint-Profil setzen (Admin)
+      operationId: postPowerShellLintProfile
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PowerShellLintProfileBody'
+      responses:
+        '200':
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/script-improve:
+    post:
+      tags: [session, ai]
+      summary: Skript verbessern (strukturiert)
+      operationId: postAiScriptImprove
+      security:
+        - sessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Modellantwort (strukturiert)
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/script-fix:
+    post:
+      tags: [session, ai]
+      summary: Skript-Fix (strukturiert)
+      operationId: postAiScriptFix
+      security:
+        - sessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Modellantwort
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/enrichment:
+    post:
+      tags: [session, ai]
+      summary: Enrichment (strukturiert)
+      operationId: postAiEnrichment
+      security:
+        - sessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Modellantwort
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/response:
+    post:
+      tags: [session, ai]
+      summary: Ad-hoc-KI-Text (Script-Editor-Sidebar; Längenlimits)
+      operationId: postAiResponse
+      security:
+        - sessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Modellantwort
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/set-api-key:
+    post:
+      tags: [session, ai]
+      summary: Provider-API-Schlüssel setzen (verschlüsselt)
+      operationId: postAiSetApiKey
+      security:
+        - sessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/api-key:
+    get:
+      tags: [session, ai]
+      summary: API-Schlüssel-Metadaten (maskiert)
+      operationId: getAiApiKeyMeta
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Metadaten
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/active-model:
+    get:
+      tags: [session, ai]
+      summary: Aktives KI-Modell
+      operationId: getAiActiveModel
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Modellkonfiguration
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/set-model:
+    post:
+      tags: [session, ai]
+      summary: Aktives Modell setzen
+      operationId: postAiSetModel
+      security:
+        - sessionCookie: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/test-openai:
+    post:
+      tags: [session, ai]
+      summary: OpenAI-Verbindung testen
+      operationId: postAiTestOpenai
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Testergebnis
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'
+
+  /api/ai/test-anthropic:
+    post:
+      tags: [session, ai]
+      summary: Anthropic-Verbindung testen
+      operationId: postAiTestAnthropic
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Testergebnis
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonError'

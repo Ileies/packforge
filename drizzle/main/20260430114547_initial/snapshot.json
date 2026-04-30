@@ -1,0 +1,813 @@
+{
+	"version": "7",
+	"dialect": "sqlite",
+	"id": "48cbcfd8-f08a-4c76-8262-b9cc32b934af",
+	"prevIds": ["00000000-0000-0000-0000-000000000000"],
+	"ddl": [
+		{
+			"name": "ai_daily_usage",
+			"entityType": "tables"
+		},
+		{
+			"name": "api_keys",
+			"entityType": "tables"
+		},
+		{
+			"name": "formfields",
+			"entityType": "tables"
+		},
+		{
+			"name": "script_checkpoints",
+			"entityType": "tables"
+		},
+		{
+			"name": "software",
+			"entityType": "tables"
+		},
+		{
+			"name": "system_settings",
+			"entityType": "tables"
+		},
+		{
+			"name": "templates",
+			"entityType": "tables"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "day",
+			"entityType": "columns",
+			"table": "ai_daily_usage"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "0",
+			"generated": null,
+			"name": "count",
+			"entityType": "columns",
+			"table": "ai_daily_usage"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": true,
+			"default": null,
+			"generated": null,
+			"name": "id",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "key_hash",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "key_prefix",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "label",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "expires_at",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "scopes_json",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "(datetime('now', 'localtime'))",
+			"generated": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "revoked_at",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "last_used_at",
+			"entityType": "columns",
+			"table": "api_keys"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": true,
+			"default": null,
+			"generated": null,
+			"name": "id",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "name",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "label",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "false",
+			"generated": null,
+			"name": "required",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "validation",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "false",
+			"generated": null,
+			"name": "predefinedvalues",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "predefinedvalues_map",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "autofill_source",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "false",
+			"generated": null,
+			"name": "is_installer_dropdown",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "false",
+			"generated": null,
+			"name": "is_system_field",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "false",
+			"generated": null,
+			"name": "is_readonly",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "true",
+			"generated": null,
+			"name": "show_in_library",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "false",
+			"generated": null,
+			"name": "is_spacer",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "false",
+			"generated": null,
+			"name": "is_dropdown",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "dropdown_values",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "default_value",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "'both'",
+			"generated": null,
+			"name": "field_scope",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "0",
+			"generated": null,
+			"name": "sort_order",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "info",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "(datetime('now', 'localtime'))",
+			"generated": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"table": "formfields"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": true,
+			"default": null,
+			"generated": null,
+			"name": "id",
+			"entityType": "columns",
+			"table": "script_checkpoints"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "software_id",
+			"entityType": "columns",
+			"table": "script_checkpoints"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "checkpoint_number",
+			"entityType": "columns",
+			"table": "script_checkpoints"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "name",
+			"entityType": "columns",
+			"table": "script_checkpoints"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "generated_script",
+			"entityType": "columns",
+			"table": "script_checkpoints"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "comment",
+			"entityType": "columns",
+			"table": "script_checkpoints"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "author",
+			"entityType": "columns",
+			"table": "script_checkpoints"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "(datetime('now', 'localtime'))",
+			"generated": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"table": "script_checkpoints"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": true,
+			"default": null,
+			"generated": null,
+			"name": "id",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "name",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "version",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "file_name",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "file_path",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "installer_sha256",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "file_size",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "form_data",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "generated_script",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "template_id",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "additional_files",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "support_files",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "(datetime('now', 'localtime'))",
+			"generated": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "(datetime('now', 'localtime'))",
+			"generated": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"table": "software"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "key",
+			"entityType": "columns",
+			"table": "system_settings"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "value",
+			"entityType": "columns",
+			"table": "system_settings"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "(datetime('now', 'localtime'))",
+			"generated": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"table": "system_settings"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": true,
+			"default": null,
+			"generated": null,
+			"name": "id",
+			"entityType": "columns",
+			"table": "templates"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "content",
+			"entityType": "columns",
+			"table": "templates"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "1",
+			"generated": null,
+			"name": "major_version",
+			"entityType": "columns",
+			"table": "templates"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "0",
+			"generated": null,
+			"name": "minor_version",
+			"entityType": "columns",
+			"table": "templates"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "(datetime('now', 'localtime'))",
+			"generated": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"table": "templates"
+		},
+		{
+			"columns": ["software_id"],
+			"tableTo": "software",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"nameExplicit": false,
+			"name": "fk_script_checkpoints_software_id_software_id_fk",
+			"entityType": "fks",
+			"table": "script_checkpoints"
+		},
+		{
+			"columns": ["day"],
+			"nameExplicit": false,
+			"name": "ai_daily_usage_pk",
+			"table": "ai_daily_usage",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "api_keys_pk",
+			"table": "api_keys",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "formfields_pk",
+			"table": "formfields",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "script_checkpoints_pk",
+			"table": "script_checkpoints",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "software_pk",
+			"table": "software",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["key"],
+			"nameExplicit": false,
+			"name": "system_settings_pk",
+			"table": "system_settings",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "templates_pk",
+			"table": "templates",
+			"entityType": "pks"
+		},
+		{
+			"columns": [
+				{
+					"value": "revoked_at",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "idx_api_keys_active",
+			"entityType": "indexes",
+			"table": "api_keys"
+		},
+		{
+			"columns": [
+				{
+					"value": "software_id",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "idx_checkpoints_software_id",
+			"entityType": "indexes",
+			"table": "script_checkpoints"
+		},
+		{
+			"columns": [
+				{
+					"value": "software_id",
+					"isExpression": false
+				},
+				{
+					"value": "checkpoint_number",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "idx_checkpoints_number",
+			"entityType": "indexes",
+			"table": "script_checkpoints"
+		},
+		{
+			"columns": [
+				{
+					"value": "created_at",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "idx_software_created_at",
+			"entityType": "indexes",
+			"table": "software"
+		},
+		{
+			"columns": [
+				{
+					"value": "name",
+					"isExpression": false
+				},
+				{
+					"value": "version",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "idx_software_name_version",
+			"entityType": "indexes",
+			"table": "software"
+		},
+		{
+			"columns": [
+				{
+					"value": "created_at",
+					"isExpression": false
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"origin": "manual",
+			"name": "idx_templates_created_at",
+			"entityType": "indexes",
+			"table": "templates"
+		},
+		{
+			"columns": ["key_hash"],
+			"nameExplicit": false,
+			"name": "api_keys_key_hash_unique",
+			"entityType": "uniques",
+			"table": "api_keys"
+		},
+		{
+			"columns": ["label"],
+			"nameExplicit": false,
+			"name": "formfields_label_unique",
+			"entityType": "uniques",
+			"table": "formfields"
+		}
+	],
+	"renames": []
+}

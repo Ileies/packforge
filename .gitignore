@@ -1,0 +1,53 @@
+# --- OS & Editor ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# --- Dependencies & Build ---
+node_modules
+/build
+/.svelte-kit
+/package
+dist
+*.tsbuildinfo
+
+# --- Umgebung & Geheimnisse (.env.example bleibt absichtlich versioniert) ---
+.env
+.env.*
+!.env.example
+.envrc
+.direnv
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
+.npmrc.local
+
+# --- Vite ---
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# --- Caches ---
+.cache
+
+# --- Tests / Coverage / E2E ---
+/test-results/
+/playwright-report/
+/blob-report/
+coverage
+.nyc_output
+
+# --- Laufzeit-Daten (Prompts/Templates bleiben versioniert) ---
+/data/database/*.db
+/data/database/*.db-journal
+/data/database/*.db-wal
+/data/database/*.db-shm
+/data/database/vitest-migrate-*.db
+!/data/database/.gitkeep
+/data/uploads/*
+!/data/uploads/.gitkeep
+/data/logs/*
+!/data/logs/.gitkeep

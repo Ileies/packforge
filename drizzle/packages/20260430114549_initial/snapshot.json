@@ -1,0 +1,360 @@
+{
+	"version": "7",
+	"dialect": "sqlite",
+	"id": "914e8fc0-bcb7-4825-8eca-6d3a9ddb00f5",
+	"prevIds": ["00000000-0000-0000-0000-000000000000"],
+	"ddl": [
+		{
+			"name": "packages",
+			"entityType": "tables"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": true,
+			"default": null,
+			"generated": null,
+			"name": "id",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "false",
+			"generated": null,
+			"name": "check_by_ai",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "integer",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "true",
+			"generated": null,
+			"name": "is_software_package",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_vendor",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_name",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_search_name",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_version",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_arch",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_lang",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_revision",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_script_author",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "app_script_date",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "target_environment",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "legacy_script_path",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "(datetime('now'))",
+			"generated": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "(datetime('now'))",
+			"generated": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "install_file_path",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "install_args",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "install_file_path_mst",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "install_file_path_msp",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "uninstall_file_path",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "uninstall_args",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": true,
+			"autoincrement": false,
+			"default": "'EXE'",
+			"generated": null,
+			"name": "uninstall_type",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "require_admin",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "success_exit_codes",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "reboot_exit_codes",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "processes_to_close",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "integer",
+			"notNull": false,
+			"autoincrement": false,
+			"default": "900",
+			"generated": null,
+			"name": "processes_to_close_timer",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "pre_install_checks",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "update_path",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "post_install_actions",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "extended_return_codes",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "post_uninstall_actions",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"type": "text",
+			"notNull": false,
+			"autoincrement": false,
+			"default": null,
+			"generated": null,
+			"name": "original_script_text",
+			"entityType": "columns",
+			"table": "packages"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "packages_pk",
+			"table": "packages",
+			"entityType": "pks"
+		}
+	],
+	"renames": []
+}

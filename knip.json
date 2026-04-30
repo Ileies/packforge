@@ -1,0 +1,20 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"entry": [
+		"src/hooks.server.ts",
+		"svelte.config.js",
+		"vite.config.ts",
+		"src/routes/**/*/+{page,server,layout,error}{,@*}.{ts,svelte}"
+	],
+	"project": ["src/**/*.{ts,svelte}", "tests/**/*.ts", "e2e/**/*.ts"],
+	"ignore": [
+		".svelte-kit/**",
+		"build/**",
+		"src/lib/components/ui/**",
+		"src/lib/index.ts",
+		"src/lib/server/auth/api-guard.ts",
+		"src/lib/server/repo/api-keys.repo.ts",
+		"src/lib/server/uploads-cleanup.ts"
+	],
+	"ignoreDependencies": ["shadcn-svelte", "svelte-check"]
+}

@@ -1,0 +1,8 @@
+# Entscheidung: weekly / npm im Repo-Root — SBOM bleibt separates Release-Thema (Roadmap §3).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10

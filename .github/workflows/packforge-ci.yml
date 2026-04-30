@@ -1,0 +1,96 @@
+name: PackForge verify
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'e2e/**'
+      - 'package.json'
+      - 'bun.lock'
+      - 'tsconfig.json'
+      - 'vite.config.ts'
+      - 'vitest.config.ts'
+      - 'playwright.config.ts'
+      - 'svelte.config.js'
+      - 'eslint.config.js'
+      - 'knip.json'
+      - '.prettierrc'
+      - '.prettierignore'
+      - 'drizzle.config.ts'
+      - 'drizzle.packages.config.ts'
+      - 'drizzle/**'
+      - 'scripts/check-bundle-budget.mjs'
+      - '.github/workflows/packforge-ci.yml'
+      - '.github/dependabot.yml'
+      - '.devcontainer/**'
+      - 'docs/openapi.yaml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'e2e/**'
+      - 'package.json'
+      - 'bun.lock'
+      - 'tsconfig.json'
+      - 'vite.config.ts'
+      - 'vitest.config.ts'
+      - 'playwright.config.ts'
+      - 'svelte.config.js'
+      - 'eslint.config.js'
+      - 'knip.json'
+      - '.prettierrc'
+      - '.prettierignore'
+      - 'drizzle.config.ts'
+      - 'drizzle.packages.config.ts'
+      - 'drizzle/**'
+      - 'scripts/check-bundle-budget.mjs'
+      - '.github/workflows/packforge-ci.yml'
+      - '.github/dependabot.yml'
+      - '.devcontainer/**'
+      - 'docs/openapi.yaml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run verify
+
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: development
+      # Nur CI: erfüllt validate-env bei ALLOW_DEV_LOGIN (mind. 32 Zeichen, kein Platzhalter).
+      JWT_SECRET: packforge-github-actions-ci-e2e-not-for-production-use
+      ALLOW_DEV_LOGIN: 'true'
+      COOKIE_INSECURE: '1'
+      LOG_FILE_ENABLED: 'false'
+      # Optional: Repository-Secret, falls lokal `DEV_LOGIN_PASSWORD` gesetzt ist (siehe README).
+      DEV_LOGIN_PASSWORD: ${{ secrets.DEV_LOGIN_PASSWORD }}
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: SQLite-Verzeichnisse und Schema (Migrationen)
+        run: |
+          mkdir -p data/database data/uploads data/logs
+          rm -f data/database/packforge.db data/database/packforge.db-journal data/database/packages.db data/database/packages.db-journal
+          bun run db:migrate
+          bun run db:migrate:packages
+      - name: Playwright (Chromium)
+        run: bun x playwright install chromium --with-deps
+      - name: E2E-Tests
+        run: bun run e2e

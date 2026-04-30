@@ -1,0 +1,133 @@
+@import 'tailwindcss';
+
+/* Dunkelmodus: <html class="dark"> … (Schalter kann später ergänzt werden) */
+@custom-variant dark (&:is(.dark *));
+
+/* Semantik + Akzent (Petrol/Teal): wirkt als Werkzeug klarer als reines Grau */
+:root {
+	--radius: 0.625rem;
+	--background: oklch(0.985 0.008 200);
+	--foreground: oklch(0.22 0.02 260);
+	--card: oklch(1 0.004 200);
+	--card-foreground: oklch(0.22 0.02 260);
+	--popover: oklch(1 0.004 200);
+	--popover-foreground: oklch(0.22 0.02 260);
+	--primary: oklch(0.42 0.11 198);
+	--primary-foreground: oklch(0.99 0.01 200);
+	--secondary: oklch(0.96 0.004 286.3);
+	--secondary-foreground: oklch(0.27 0.006 286);
+	--muted: oklch(0.955 0.015 200);
+	--muted-foreground: oklch(0.48 0.03 260);
+	--accent: oklch(0.94 0.03 195);
+	--accent-foreground: oklch(0.28 0.06 198);
+	--destructive: oklch(0.58 0.22 27);
+	--border: oklch(0.9 0.02 220);
+	--input: oklch(0.91 0.02 220);
+	--ring: oklch(0.55 0.08 198);
+}
+
+.dark {
+	--background: oklch(0.145 0.02 260);
+	--foreground: oklch(0.97 0.01 200);
+	--card: oklch(0.19 0.025 260);
+	--card-foreground: oklch(0.97 0.01 200);
+	--popover: oklch(0.19 0.025 260);
+	--popover-foreground: oklch(0.97 0.01 200);
+	--primary: oklch(0.72 0.11 195);
+	--primary-foreground: oklch(0.14 0.03 260);
+	--secondary: oklch(0.26 0.03 260);
+	--secondary-foreground: oklch(0.97 0.01 200);
+	--muted: oklch(0.26 0.03 260);
+	--muted-foreground: oklch(0.68 0.03 220);
+	--accent: oklch(0.28 0.04 195);
+	--accent-foreground: oklch(0.97 0.01 200);
+	--destructive: oklch(0.65 0.2 25);
+	--border: oklch(1 0 0 / 12%);
+	--input: oklch(1 0 0 / 15%);
+	--ring: oklch(0.55 0.02 286);
+}
+
+@theme inline {
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	/* Leicht fluid zwischen Ansichten — nutzt Browser-Skalierung zusätzlich (Roadmap §28) */
+	html {
+		font-size: clamp(93.75%, 88% + 0.35vw, 112.5%);
+	}
+	body {
+		@apply bg-background text-foreground antialiased;
+		font-family:
+			'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+		font-feature-settings:
+			'kern' 1,
+			'liga' 1;
+	}
+}
+
+/* Start-/Dashboard-Hintergrund: dezente Tiefe ohne Ablenkung */
+.app-main-surface {
+	background:
+		radial-gradient(ellipse 120% 80% at 100% -20%, oklch(0.55 0.09 198 / 8%), transparent 50%),
+		radial-gradient(ellipse 80% 60% at -10% 100%, oklch(0.5 0.06 260 / 6%), transparent 45%),
+		var(--color-muted);
+}
+.dark .app-main-surface {
+	background:
+		radial-gradient(ellipse 120% 80% at 100% -20%, oklch(0.55 0.12 198 / 12%), transparent 50%),
+		radial-gradient(ellipse 80% 60% at -10% 100%, oklch(0.45 0.08 260 / 10%), transparent 45%),
+		var(--color-muted);
+}
+
+/* Barrierefreiheit: weniger Bewegung (Roadmap §28) */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* Hoher Kontrast (Roadmap §28): stärkere Kanten und Lesetext — unabhängig vom Theme-Schalter */
+@media (prefers-contrast: more) {
+	:root {
+		--foreground: oklch(0.12 0.01 285);
+		--border: oklch(0.35 0.02 285);
+		--input: oklch(0.35 0.02 285);
+		--muted-foreground: oklch(0.35 0.02 285);
+	}
+	.dark {
+		--foreground: oklch(0.995 0 0);
+		--border: oklch(0.92 0.01 286);
+		--input: oklch(0.92 0.01 286);
+		--muted-foreground: oklch(0.88 0.015 286);
+	}
+}

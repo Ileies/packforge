@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Schnelles Feedback — volle Pipeline vor Merge: bun run verify (siehe README).
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+exec bun run lint

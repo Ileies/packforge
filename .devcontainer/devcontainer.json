@@ -1,0 +1,16 @@
+{
+	"name": "PackForge (Bun)",
+	"image": "oven/bun:1",
+	"forwardPorts": [5173],
+	"postCreateCommand": "bun install",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"svelte.svelte-vscode",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"bradlc.vscode-tailwindcss"
+			]
+		}
+	}
+}
