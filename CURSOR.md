@@ -63,8 +63,8 @@ Nach Dependency-/Kit-Änderungen: `bun run prepare` (`svelte-kit sync || true`, 
 
 ### Branch je Feature / je größerem Fix
 
-- **Neues Feature** → Branch `feature/<kurz>` (z. B. `feature/script-editor-tabs`).
-- **Größerer Fix** (mehrere Dateien, riskante Stelle, längere Session) → Branch `fix/<kurz>` (z. B. `fix/csrf-login-redirect`).
+- **Neues Feature** → Branch `feature/<kurz>` (z.B. `feature/script-editor-tabs`).
+- **Größerer Fix** (mehrere Dateien, riskante Stelle, längere Session) → Branch `fix/<kurz>` (z.B. `fix/csrf-login-redirect`).
 - **Kleinkram** (Tippfehler, eine Zeile Doku): optional direkt auf `main` — nur wenn **keine** andere Session gleichzeitig am Repo arbeitet; sonst trotzdem kurzer Branch.
 
 ### Ablauf pro Session (Checkout → Arbeit → Merge)
@@ -78,8 +78,8 @@ Nach Dependency-/Kit-Änderungen: `bun run prepare` (`svelte-kit sync || true`, 
 
 ### Sonstiges
 
-- **Remote:** `origin` → GitHub **`Ileies/packforge`** (SSH z. B. `git@github.com:Ileies/packforge.git`). Öffentliche Produkt-URL: `package.json` → `homepage`, `src/lib/app/brand.ts`.
-- **Nicht versionieren:** alles aus **`.gitignore`** — v. a. **`.env`**, lokale DBs unter `data/database/`, Uploads, Logs, `build/`, Playwright-Reports; vor Commit **`git status`** prüfen.
+- **Remote:** `origin` → GitHub **`Ileies/packforge`** (SSH z.B. `git@github.com:Ileies/packforge.git`). Öffentliche Produkt-URL: `package.json` → `homepage`, `src/lib/app/brand.ts`.
+- **Nicht versionieren:** alles aus **`.gitignore`** — v.a. **`.env`**, lokale DBs unter `data/database/`, Uploads, Logs, `build/`, Playwright-Reports; vor Commit **`git status`** prüfen.
 - **Commits:** kurze Messages (`feat:` / `fix:` / `chore:` optional); sinnvolle Commit-Häufung.
 - **Vor PR / Merge in `main`:** Checkliste — **`bun run verify`** oder **`verify:fast`** bei Codeänderungen.
 - **Version & Release:** **`package.json`** → `version` (SemVer); Releases: Tag **`v1.2.3`**, `git push origin v1.2.3`; optional `gh release create v1.2.3 --generate-notes`.
@@ -104,8 +104,8 @@ Nach Dependency-/Kit-Änderungen: `bun run prepare` (`svelte-kit sync || true`, 
 ## Env, Tests, Doku
 
 - **`.env.example`** — keine echten Secrets ins Repo.
-- **Vitest:** `environment: 'node'` (`vitest.config.ts`) — reine Logik, Server-Code, API-Tests mit Mocks; schnell, ohne DOM. **`$app/*`:** vermeiden oder mocken (z. B. `tests/mocks/`); `$app/environment` in Helfern unnötig machen, wo möglich.
-- **Vitest vs. DOM / Svelte-Komponenten:** Der Standardlauf bleibt **node-only** (`bun run test` / `verify`). **UI mit Session, Routing, Ace, shadcn:** **Playwright** (`e2e/`) — echte Browserumgebung, bereits etabliert. **Optional später:** separates Vitest-Projekt (eigene Config oder Vitest-Workspace) mit `happy-dom` oder `jsdom` + `@testing-library/svelte` und Svelte-Vite-Plugin nur für kleine, isolierte Komponenten; eigenes Script (z. B. `test:dom`) und erst bei Bedarf CI — nicht den bestehenden `test`-Pfad aufblähen.
+- **Vitest:** `environment: 'node'` (`vitest.config.ts`) — reine Logik, Server-Code, API-Tests mit Mocks; schnell, ohne DOM. **`$app/*`:** vermeiden oder mocken (z.B. `tests/mocks/`); `$app/environment` in Helfern unnötig machen, wo möglich.
+- **Vitest vs. DOM / Svelte-Komponenten:** Der Standardlauf bleibt **node-only** (`bun run test` / `verify`). **UI mit Session, Routing, Ace, shadcn:** **Playwright** (`e2e/`) — echte Browserumgebung, bereits etabliert. **Optional später:** separates Vitest-Projekt (eigene Config oder Vitest-Workspace) mit `happy-dom` oder `jsdom` + `@testing-library/svelte` und Svelte-Vite-Plugin nur für kleine, isolierte Komponenten; eigenes Script (z.B. `test:dom`) und erst bei Bedarf CI — nicht den bestehenden `test`-Pfad aufblähen.
 - **Backlog-Doku:** `TODO.md`, `PERFORMANCE-LOGIC-TODO.md`, `docs/README.md` — nur bei Doku-Tasks mitpflegen.
 - **CI-E2E:** `packforge-ci.yml` → Job `e2e`; lokale Parität: vor `bun run e2e` `db:migrate` + `db:migrate:packages` (oder früheres `db:push`) + `.env` mit Dev-Login (siehe README „CI“).
 - **ESLint:** `**/*.svelte` nutzt `projectService` + **`@typescript-eslint/no-floating-promises`** (`eslint.config.js`) — schwebende Promises mit `await`, `void` o. Ä. auflösen.

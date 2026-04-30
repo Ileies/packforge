@@ -74,14 +74,14 @@ SQLite-Dateien liegen standardmäßig unter `./data/` (siehe `.env.example`). **
 
 Vorlage und Kommentare: **`.env.example`**. Wesentliche Punkte:
 
-| Thema     | Variablen (Auszug)                                                                                                                                                                                     |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Session   | **`JWT_SECRET`** — für echte Deployments setzen                                                                                                                                                        |
-| Microsoft | `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_REDIRECT_URI`, ggf. Secret je nach Flow                                                                                                                   |
-| Dev-Login | `ALLOW_DEV_LOGIN=true` (oder `1`/`yes`) zum Aktivieren, `DEV_LOGIN_PASSWORD` — siehe `.env.example`                                                                                                    |
-| KI        | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY` optional                                                                                                                                                         |
-| Pfade     | `DATA_ROOT`, `MAIN_DB_PATH`, `PACKAGES_DB_PATH`, `UPLOADS_DIR` bei Bedarf                                                                                                                              |
-| Cookies   | `COOKIE_INSECURE=1` z. B. für HTTP-Preview ohne HTTPS                                                                                                                                                  |
+| Thema     | Variablen (Auszug)                                                                                                                                                                                    |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Session   | **`JWT_SECRET`** — für echte Deployments setzen                                                                                                                                                       |
+| Microsoft | `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_REDIRECT_URI`, ggf. Secret je nach Flow                                                                                                                  |
+| Dev-Login | `ALLOW_DEV_LOGIN=true` (oder `1`/`yes`) zum Aktivieren, `DEV_LOGIN_PASSWORD` — siehe `.env.example`                                                                                                   |
+| KI        | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY` optional                                                                                                                                                        |
+| Pfade     | `DATA_ROOT`, `MAIN_DB_PATH`, `PACKAGES_DB_PATH`, `UPLOADS_DIR` bei Bedarf                                                                                                                             |
+| Cookies   | `COOKIE_INSECURE=1` z.B. für HTTP-Preview ohne HTTPS                                                                                                                                                  |
 | Betrieb   | `LOG_HTTP_ACCESS`, `LOG_LEVEL` (Server-Konsole: error/warn/info/debug), Dateilog (`LOG_DIR` / `DATA_ROOT/logs`), optional `PUBLIC_LOG_VERBOSE` (Browser-Logs), Retention, Rate-Limits — `.env.example` |
 
 ---
@@ -136,7 +136,7 @@ Reverse Proxy (TLS, große Uploads): Limits ggf. am Proxy und am Node-/HTTP-Serv
 
 ## CI
 
-GitHub Actions (bei Pfadänderungen unter `src/`, Tests, E2E, Tooling u. a.):
+GitHub Actions (bei Pfadänderungen unter `src/`, Tests, E2E, Tooling u.a.):
 
 - **`packforge-ci.yml`** — zwei parallele Jobs:
   - **`verify`:** `bun install --frozen-lockfile` + `bun run verify`
@@ -152,10 +152,6 @@ GitHub Actions (bei Pfadänderungen unter `src/`, Tests, E2E, Tooling u. a.):
 | [`AGENTS.md`](./AGENTS.md)                                   | Einstieg für Coding-Agenten (verweist auf `CURSOR.md`)            |
 | [`CURSOR.md`](./CURSOR.md)                                   | Stack, Verzeichnisse, Agenten-/Review-Konventionen                |
 | [`TODO.md`](./TODO.md)                                       | Markteintritt + Ideenpool (Bezug: `docs/produkt-und-markt.md`)    |
-| [`PERFORMANCE-LOGIC-TODO.md`](./PERFORMANCE-LOGIC-TODO.md)   | Performance, Payloads, DB-/Transport-Backlog                      |
-| [`CODE-REFACTOR-TODO.md`](./CODE-REFACTOR-TODO.md)           | Größere API-/Struktur-Refactors                                   |
-| [`ALPHA-CLEANUP-TODO.md`](./ALPHA-CLEANUP-TODO.md)           | Aufräumen nach Alpha-/Übergangsphasen                             |
-| [`DX-TODO.md`](./DX-TODO.md)                                 | Developer Experience: CI, Tooling, Doku, Onboarding               |
 | [`CHANGELOG.md`](./CHANGELOG.md)                             | Versionsnotizen (Keep a Changelog)                                |
 | [`docs/README.md`](./docs/README.md)                         | Inhaltsverzeichnis der gebündelten Doku                           |
 | [`docs/produkt-und-markt.md`](./docs/produkt-und-markt.md)   | Marktziel, Positionierung, Marktreife, Launch-Checkliste          |

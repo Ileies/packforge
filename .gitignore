@@ -25,6 +25,7 @@ dist
 secrets.json
 credentials.json
 .npmrc.local
+/.idea
 
 # --- Vite ---
 vite.config.js.timestamp-*

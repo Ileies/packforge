@@ -17,7 +17,7 @@
 
 ## Organisationen und Teams
 
-**Entscheidung:** **Nach** einem stabilen Mandantenmodell (siehe [Mandantenfähigkeit](#mandantenfähigkeit)). Für Launch und Einzelorganisation pro Instanz reichen **globale Rollen** (Admin/User o. Ä.) — keine Pflicht für Teams.
+**Entscheidung:** **Nach** einem stabilen Mandantenmodell (siehe [Mandantenfähigkeit](#mandantenfähigkeit)). Für Launch und Einzelorganisation pro Instanz reichen **globale Rollen** (Admin/User o.Ä.) — keine Pflicht für Teams.
 
 ### Todos
 
@@ -57,7 +57,7 @@
 
 - [x] Permissions benannt in **`src/lib/server/auth/roles.ts`** — konsistent über `getRolePermissions` / Client `hasPermission`.
 - [x] **Tabelle Rolle × Permission:** [`handbuch.md`](./handbuch.md).
-- [ ] ABAC: erst Ticket mit **konkretem Regelbeispiel** (z. B. Export nur ohne Klassifizierung „secret“); bis dahin nicht implementieren.
+- [ ] ABAC: erst Ticket mit **konkretem Regelbeispiel** (z.B. Export nur ohne Klassifizierung „secret“); bis dahin nicht implementieren.
 
 ---
 

@@ -8,7 +8,7 @@
 
 ## Meldung von Schwachstellen
 
-Bitte meldet Sicherheitsprobleme **vertraulich** (nicht als öffentliches GitHub-Issue mit Exploit-Details), z. B. per privater Nachricht an die Repository-Inhaber:in oder über die auf der persönlichen Website angegebene Kontaktmöglichkeit.
+Bitte meldet Sicherheitsprobleme **vertraulich** (nicht als öffentliches GitHub-Issue mit Exploit-Details), z.B. per privater Nachricht an die Repository-Inhaber:in oder über die auf der persönlichen Website angegebene Kontaktmöglichkeit.
 
 ## Betrieb
 

@@ -14,7 +14,7 @@ Kurzüberblick für Onboarding — keine vollständige API-Doku.
 
 ## Konventionen
 
-- **`*.repo.ts`**: Listenabrufe als `list…` (z. B. `listSoftwareSummaries`, `listFormfields`), Einzelzeilen als `get…ById` — konsistent mit den bestehenden Repos unter `repo/`.
+- **`*.repo.ts`**: Listenabrufe als `list…` (z.B. `listSoftwareSummaries`, `listFormfields`), Einzelzeilen als `get…ById` — konsistent mit den bestehenden Repos unter `repo/`.
 - JSON-POST-Bodies: bei strukturierten Payloads `$lib/server/http/parse-request-json` mit **Zod** nutzen (Beispiele: `/api/ai/response`, `/api/auth/login`).
 - API-Routen: Fehler über `$lib/server/http/errors.ts` (`badRequest`, `notFound`, `apiJsonError`, …) — einheitlich `error`, `code` (`PF_*`), `docRef` (siehe `docs/api.md#fehlerantwort-json`).
 - Mehrere DB-Writes, die zusammengehören: `getMainDb().transaction((tx) => { … })` (siehe `software.repo.ts`).
