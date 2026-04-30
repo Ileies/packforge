@@ -57,6 +57,18 @@ Nach Dependency-/Kit-Änderungen: `bun run prepare` (`svelte-kit sync || true`, 
 
 ---
 
+## Git & Remote
+
+- **Remote:** `origin` → GitHub **`Ileies/packforge`** (kanonisch; SSH z. B. `git@github.com:Ileies/packforge.git`). Öffentliche Produkt-URL bleibt unabhängig davon in `package.json` → `homepage` und `src/lib/app/brand.ts`.
+- **Standardbranch:** `main` — laufende Arbeit dort committen und pushen, **oder** Feature-Branch von `main`, dann Merge per PR (empfohlen bei größeren/reviewpflichtigen Änderungen).
+- **Nicht versionieren:** alles, was in **`.gitignore`** steht — v. a. **`.env`**, lokale SQLite-Dateien unter `data/database/`, Uploads, Logs, `build/`, Playwright-Reports. Vor `git add` bei Zweifeln `git status` prüfen.
+- **Commits:** kurze, sachliche Messages (imperativ oder `chore:` / `fix:` / `feat:` — kein Muss, aber hilft der Lesbarkeit); ein Commit = eine in sich schlüssige Einheit, wo sinnvoll.
+- **Vor Push / PR:** siehe Checkliste unten — mindestens `bun run verify` (oder `verify:fast`) bei substanziellen Codeänderungen.
+- **Version & Release:** sichtbare App-Version in **`package.json`** → `version` (SemVer). Für markierte Releases: annotierter Git-Tag **`v1.2.3`** passend zur `version`, Tag pushen (`git push origin v1.2.3`); optional GitHub Release z. B. `gh release create v1.2.3 --generate-notes`.
+- **Hilfen:** `gh repo view` / `gh auth status` für GitHub-CLI; Klonen: `git clone git@github.com:Ileies/packforge.git`.
+
+---
+
 ## Konventionen
 
 - **Svelte 5:** Runes (`$state`, `$derived`, `$effect` mit Cleanup). Kein Legacy-`export let` für Neues.
@@ -108,6 +120,7 @@ Kontext: relevante `+page.svelte` / `+server.ts`-Pfade nennen. Änderungen: **mi
 ## Checkliste (größere Aufgaben)
 
 - [ ] `bun run verify` grün
+- [ ] Git: kein `.env` / keine ignorierten Geheimnisse im Commit
 - [ ] Keine neuen `svelte-check`-Warnungen ohne Grund
 - [ ] SSR/Client-Pfade bei `+page.svelte`-Änderungen geprüft
 - [ ] `.env.example` bei neuen Env-Vars
