@@ -59,13 +59,31 @@ Nach Dependency-/Kit-Änderungen: `bun run prepare` (`svelte-kit sync || true`, 
 
 ## Git & Remote
 
-- **Remote:** `origin` → GitHub **`Ileies/packforge`** (kanonisch; SSH z. B. `git@github.com:Ileies/packforge.git`). Öffentliche Produkt-URL bleibt unabhängig davon in `package.json` → `homepage` und `src/lib/app/brand.ts`.
-- **Standardbranch:** `main` — laufende Arbeit dort committen und pushen, **oder** Feature-Branch von `main`, dann Merge per PR (empfohlen bei größeren/reviewpflichtigen Änderungen).
-- **Nicht versionieren:** alles, was in **`.gitignore`** steht — v. a. **`.env`**, lokale SQLite-Dateien unter `data/database/`, Uploads, Logs, `build/`, Playwright-Reports. Vor `git add` bei Zweifeln `git status` prüfen.
-- **Commits:** kurze, sachliche Messages (imperativ oder `chore:` / `fix:` / `feat:` — kein Muss, aber hilft der Lesbarkeit); ein Commit = eine in sich schlüssige Einheit, wo sinnvoll.
-- **Vor Push / PR:** siehe Checkliste unten — mindestens `bun run verify` (oder `verify:fast`) bei substanziellen Codeänderungen.
-- **Version & Release:** sichtbare App-Version in **`package.json`** → `version` (SemVer). Für markierte Releases: annotierter Git-Tag **`v1.2.3`** passend zur `version`, Tag pushen (`git push origin v1.2.3`); optional GitHub Release z. B. `gh release create v1.2.3 --generate-notes`.
-- **Hilfen:** `gh repo view` / `gh auth status` für GitHub-CLI; Klonen: `git clone git@github.com:Ileies/packforge.git`.
+**Ziel:** Mehrere Cursor-/KI-Sessions parallel ohne sich gegenseitig Arbeitsstände zu zerstören — dafür **`main` nur als Integrationslinie**, jede inhaltliche Session auf **eigenem Branch** mit klarem Merge.
+
+### Branch je Feature / je größerem Fix
+
+- **Neues Feature** → Branch `feature/<kurz>` (z. B. `feature/script-editor-tabs`).
+- **Größerer Fix** (mehrere Dateien, riskante Stelle, längere Session) → Branch `fix/<kurz>` (z. B. `fix/csrf-login-redirect`).
+- **Kleinkram** (Tippfehler, eine Zeile Doku): optional direkt auf `main` — nur wenn **keine** andere Session gleichzeitig am Repo arbeitet; sonst trotzdem kurzer Branch.
+
+### Ablauf pro Session (Checkout → Arbeit → Merge)
+
+1. **`git fetch origin`** und **`git checkout main`**, dann **`git pull origin main`** (aktueller Stand).
+2. **`git checkout -b feature/…`** bzw. **`fix/…`** — ein Branch pro Task, nicht wiederverwenden für themenfremde Folgearbeit.
+3. Arbeiten, committen; Branch **`git push -u origin <branch>`** pushen.
+4. **Zusammenführen:** bevorzugt **Pull Request** auf GitHub (`gh pr create` oder Web-UI), nach Review **`main` mergen**. Alternativ lokal: auf `main` wechseln, pullen, **`git merge <branch>`** (oder Rebase nur wenn du die Geschichte sauber halten willst — einheitliche Teamregel vermeidet Chaos).
+5. Wenn **`main`** während der Session weitergezogen ist: auf dem Feature-Branch **`git merge origin/main`** (oder `git rebase origin/main` — dann force-push nur mit Absprache), Konflikte dort lösen, danach erst PR/Merge.
+6. **Nie** zwei parallelen Sessions denselben Branch bearbeiten lassen, ohne dass sich Mensch oder Agent die Reihe absprechen.
+
+### Sonstiges
+
+- **Remote:** `origin` → GitHub **`Ileies/packforge`** (SSH z. B. `git@github.com:Ileies/packforge.git`). Öffentliche Produkt-URL: `package.json` → `homepage`, `src/lib/app/brand.ts`.
+- **Nicht versionieren:** alles aus **`.gitignore`** — v. a. **`.env`**, lokale DBs unter `data/database/`, Uploads, Logs, `build/`, Playwright-Reports; vor Commit **`git status`** prüfen.
+- **Commits:** kurze Messages (`feat:` / `fix:` / `chore:` optional); sinnvolle Commit-Häufung.
+- **Vor PR / Merge in `main`:** Checkliste — **`bun run verify`** oder **`verify:fast`** bei Codeänderungen.
+- **Version & Release:** **`package.json`** → `version` (SemVer); Releases: Tag **`v1.2.3`**, `git push origin v1.2.3`; optional `gh release create v1.2.3 --generate-notes`.
+- **Hilfen:** `gh repo view`, `gh auth status`; Klonen: `git clone git@github.com:Ileies/packforge.git`.
 
 ---
 
@@ -115,12 +133,14 @@ Nach Dependency-/Kit-Änderungen: `bun run prepare` (`svelte-kit sync || true`, 
 
 Kontext: relevante `+page.svelte` / `+server.ts`-Pfade nennen. Änderungen: **minimal**, taskbezogen. Sprache: **Deutsch**, wenn der Nutzer nichts anderes verlangt. Grenze: dieses Repo-Root.
 
+**Parallel zu anderen Sessions:** Zu Beginn der Task **eigenen Branch** anlegen (siehe **Git & Remote**); nicht unkoordiniert auf `main` committen, wenn gleichzeitig andere Agenten oder Editoren am selben Klon arbeiten.
+
 ---
 
 ## Checkliste (größere Aufgaben)
 
 - [ ] `bun run verify` grün
-- [ ] Git: kein `.env` / keine ignorierten Geheimnisse im Commit
+- [ ] Git: Arbeit auf **`feature/…`** oder **`fix/…`**, nicht unkontrolliert auf `main` bei parallelen Sessions; kein `.env` / keine ignorierten Geheimnisse im Commit
 - [ ] Keine neuen `svelte-check`-Warnungen ohne Grund
 - [ ] SSR/Client-Pfade bei `+page.svelte`-Änderungen geprüft
 - [ ] `.env.example` bei neuen Env-Vars
