@@ -41,7 +41,7 @@ vite.config.ts.timestamp-*
 coverage
 .nyc_output
 
-# --- Laufzeit-Daten (Prompts/Templates bleiben versioniert) ---
+# --- Laufzeit-Daten (Prompts versioniert; Templates nur lokal) ---
 /data/database/*.db
 /data/database/*.db-journal
 /data/database/*.db-wal
@@ -52,3 +52,5 @@ coverage
 !/data/uploads/.gitkeep
 /data/logs/*
 !/data/logs/.gitkeep
+/data/templates/*
+!/data/templates/.gitkeep

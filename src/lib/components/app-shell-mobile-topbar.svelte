@@ -9,6 +9,9 @@
 	import AppGithubRepoLink from '$lib/components/app-github-repo-link.svelte';
 	import { Button } from '$lib/components/ui/button/index';
 
+	const outlineAuthBtn =
+		'border-border bg-background text-foreground hover:bg-muted/50 h-8 shrink-0 cursor-pointer gap-1.5 px-3 font-normal shadow-none';
+
 	let {
 		mobileOpen,
 		dark,
@@ -72,12 +75,12 @@
 		<Button
 			variant="outline"
 			size="sm"
-			class="h-7 shrink-0 gap-1 px-2 text-xs"
+			class={outlineAuthBtn}
 			title="Anmelden"
 			aria-label="Anmelden"
 			onclick={onInviteLogin}
 		>
-			<LogIn class="size-3.5" aria-hidden="true" />
+			<LogIn class="size-3.5 shrink-0 opacity-80" aria-hidden="true" />
 			Anmelden
 		</Button>
 	{/if}
@@ -85,6 +88,12 @@
 		<span class="text-muted-foreground max-w-[6rem] truncate text-xs sm:max-w-[7.5rem]">{sessionBadge}</span>
 	{/if}
 	<div class="ml-auto flex shrink-0 items-center gap-1">
+		{#if !openPortfolioDemo || !portfolioGuest}
+			<AppGithubRepoLink
+				variant="outline"
+				class="border-border size-8 shadow-none hover:bg-muted/50"
+			/>
+		{/if}
 		<Button
 			variant="ghost"
 			size="icon"
@@ -99,6 +108,5 @@
 				<Moon class="size-4" aria-hidden="true" />
 			{/if}
 		</Button>
-		<AppGithubRepoLink class="size-8 [&_svg]:size-4" />
 	</div>
 </div>

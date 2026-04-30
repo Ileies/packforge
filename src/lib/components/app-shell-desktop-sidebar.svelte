@@ -7,7 +7,8 @@
 	import Search from 'lucide-svelte/icons/search';
 	import Sun from 'lucide-svelte/icons/sun';
 
-	import { PRODUCT_DOMAIN_LINE, PRODUCT_NAME } from '$lib/app/brand';
+	import { PRODUCT_NAME } from '$lib/app/brand';
+	import AppShellGithubFooterLink from '$lib/components/app-shell-github-footer-link.svelte';
 	import AppShellHelpLinks from '$lib/components/app-shell-help-links.svelte';
 	import AppShellNavigation from '$lib/components/app-shell-navigation.svelte';
 	import type { NavGroup } from '$lib/components/app-shell-types';
@@ -27,7 +28,6 @@
 		onLogout,
 		openPortfolioDemo = false,
 		portfolioGuest = false,
-		footerLogoutLabel = 'Abmelden',
 		onInviteLogin
 	}: {
 		navGroups: NavGroup[];
@@ -42,7 +42,6 @@
 		onLogout: () => void;
 		openPortfolioDemo?: boolean;
 		portfolioGuest?: boolean;
-		footerLogoutLabel?: string;
 		onInviteLogin: () => void;
 	} = $props();
 </script>
@@ -58,9 +57,8 @@
 				>
 					<Package class="size-[1.125rem]" aria-hidden="true" />
 				</span>
-				<div class="min-w-0 self-center space-y-0.5">
+				<div class="min-w-0 self-center">
 					<span class="font-semibold tracking-tight">{PRODUCT_NAME}</span>
-					<p class="text-muted-foreground text-xs leading-snug">{PRODUCT_DOMAIN_LINE}</p>
 				</div>
 			</div>
 			<div class="flex shrink-0 items-center gap-0.5">
@@ -116,16 +114,30 @@
 		linkClass="text-muted-foreground hover:bg-muted/80 flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:text-foreground"
 	/>
 
-	<div class="border-border mt-auto flex shrink-0 flex-col gap-2 border-t p-2">
-		{#if openPortfolioDemo && portfolioGuest}
-			<Button variant="default" class="justify-start gap-2" onclick={onInviteLogin} title="Anmelden" aria-label="Anmelden">
-				<LogIn class="size-4" aria-hidden="true" />
-				Anmelden
-			</Button>
-		{/if}
-		<Button variant="ghost" class="justify-start gap-2" onclick={onLogout}>
-			<LogOut class="size-4" aria-hidden="true" />
-			{footerLogoutLabel}
-		</Button>
+	<div class="border-border bg-muted/20 mt-auto shrink-0 border-t px-2 py-2">
+		<AppShellGithubFooterLink class="w-full justify-start" />
+		<div class="mt-2 space-y-1.5">
+			{#if openPortfolioDemo && portfolioGuest}
+				<Button
+					variant="outline"
+					class="border-border bg-background text-foreground hover:bg-muted/50 h-9 w-full cursor-pointer justify-center gap-2 font-normal shadow-none"
+					onclick={onInviteLogin}
+					title="Anmelden"
+					aria-label="Anmelden"
+				>
+					<LogIn class="size-3.5 shrink-0 opacity-80" aria-hidden="true" />
+					Anmelden
+				</Button>
+			{:else if !portfolioGuest}
+				<Button
+					variant="outline"
+					class="border-border bg-background text-foreground hover:bg-muted/50 h-9 w-full cursor-pointer justify-center gap-2 font-normal shadow-none"
+					onclick={onLogout}
+				>
+					<LogOut class="size-3.5 shrink-0 opacity-80" aria-hidden="true" />
+					Abmelden
+				</Button>
+			{/if}
+		</div>
 	</div>
 </aside>

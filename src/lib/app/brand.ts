@@ -1,9 +1,6 @@
 /** Öffentlicher Produktname (Sidebar, Login, Seitentitel, Meta). */
 export const PRODUCT_NAME = 'PackForge';
 
-/** Kurzbeschreibung des Einsatzgebiets (Navigation, kein UI-Badge). */
-export const PRODUCT_DOMAIN_LINE = 'PSADT · Windows-Verteilung';
-
 /**
  * Öffentliche Live-Instanz (eine Domain). Dient u. a. kanonischen Links, Open-Graph und
  * MSAL-Redirect, wenn `AZURE_REDIRECT_URI` nicht gesetzt ist (nur außerhalb `dev`).

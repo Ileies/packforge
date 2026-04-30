@@ -111,124 +111,87 @@
 	<main
 		id="login-main"
 		tabindex="-1"
-		class="outline-none mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-8 px-4 py-12 sm:px-6"
+		class="outline-none mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-7 px-4 py-10 sm:px-6"
 	>
-		<header class="space-y-3 text-center">
+		<header class="space-y-2 text-center">
 			<div class="flex justify-center">
 				<span
-					class="bg-primary/15 text-primary inline-flex size-14 items-center justify-center rounded-2xl shadow-sm ring-1 ring-black/[0.04] dark:ring-white/[0.08]"
+					class="bg-primary/15 text-primary inline-flex size-14 items-center justify-center rounded-xl shadow-sm ring-1 ring-black/[0.04] dark:ring-white/[0.08]"
 				>
 					<Package class="size-8" aria-hidden="true" />
 				</span>
 			</div>
-			<div class="space-y-2">
+			<div class="space-y-1.5">
 				<h1 class="text-foreground text-2xl font-semibold tracking-tight sm:text-3xl">{PRODUCT_NAME}</h1>
 				<p class="text-muted-foreground mx-auto max-w-md text-sm leading-relaxed">
 					{#if openPortfolioDemo}
-						Vollzugrang nur auf <strong class="text-foreground font-medium">persönliche Einladung</strong> —
-						keine öffentliche Registrierung oder Selbstservice für die erweiterten Funktionen. Details und
-						Zugang unten auf dieser Seite.
+						Öffentliche Demo zum Stöbern; erweiterter Zugriff nur für freigegebene Konten — nicht per
+						Selbstregistrierung.
 					{:else}
-						Anmeldung für die interne Oberfläche: PSADT-Pakete, Stammdaten, Vorlagen und Export aus einem
-						gemeinsamen Hub.
+						Anmeldung für die interne Oberfläche: Vorlagen, Stammdaten, Skripte und Export aus einer
+						gemeinsamen Bibliothek.
 					{/if}
 				</p>
 			</div>
 		</header>
 
-		<div class="flex flex-col gap-6">
+		<div class="flex flex-col gap-5">
 			{#if openPortfolioDemo}
-				<Card
-					class="border-primary/25 bg-primary/5 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.06]"
-				>
-					<CardHeader class="pb-2">
-						<CardTitle class="text-base">Öffentliche Demo</CardTitle>
-						<CardDescription class="leading-relaxed">
-							Die App ist ohne Login nutzbar (eingeschränkt). Vollzugrang nur mit Einladung: unten mit
-							vergebenem Passwort und Rolle anmelden (oder, falls eingerichtet, mit Microsoft Entra ID).
+				<Card class="border-border shadow-sm">
+					<CardHeader class="space-y-1.5 pb-0">
+						<CardTitle class="text-base font-medium">Öffentliche Demo</CardTitle>
+						<CardDescription class="text-sm leading-snug">
+							Ohne Login eingeschränkt nutzbar. Hier geht es zurück in die Demo-Ansicht.
 						</CardDescription>
 					</CardHeader>
-					<CardContent>
-						<Button variant="outline" size="sm" href={resolve('/welcome')}>Zurück zur Demo</Button>
+					<CardContent class="pt-3">
+						<Button variant="outline" size="sm" class="w-full sm:w-auto" href={resolve('/welcome')}
+							>Zurück zur Demo</Button
+						>
 					</CardContent>
 				</Card>
 			{/if}
 			{#if cfg?.devLogin?.enabled}
-				<Card class="border-primary/20 shadow-md ring-1 ring-black/[0.03] dark:ring-white/[0.06]">
-					<CardHeader class="pb-2">
-						<CardTitle class="text-lg">
-							{openPortfolioDemo ? 'Anmeldung (Einladung)' : 'Lokal ohne Microsoft'}
+				<Card class="border-border shadow-sm">
+					<CardHeader class="space-y-1.5 pb-0">
+						<CardTitle class="text-base font-medium">
+							{openPortfolioDemo ? 'Zugang mit Passwort' : 'Lokal (Entwickler)'}
 						</CardTitle>
-						<CardDescription class="leading-relaxed">
+						<CardDescription class="text-sm leading-snug">
 							{#if openPortfolioDemo}
-								Nur für freigeschaltete Nutzer: Rolle wählen und das vereinbarte Passwort eingeben. Kein
-								Selbstservice — Zugang erfolgt auf Einladung.
+								Rolle wählen und das vereinbarte Passwort eingeben.
 							{:else}
-								Anmeldung ohne Entra ID — nur für lokale oder abgeschirmte Umgebungen; regulärer Zugang über
-								die Karte „Microsoft Entra ID“ darunter.
+								Für lokale oder abgeschirmte Umgebungen. Produktiv nutzen Sie Microsoft Entra ID unten.
 							{/if}
 						</CardDescription>
-						<details class="text-muted-foreground mt-3 text-sm leading-relaxed">
-							<summary
-								class="text-foreground cursor-pointer text-sm font-medium underline-offset-4 hover:underline"
-							>
-								Einrichtung und Abgrenzung
-							</summary>
-							<div class="mt-2 space-y-2">
-								<p>
-									Interner Hilfsweg (nicht die produktive Kundenanmeldung). Technisch dieselbe App-Session wie
-									nach Entra-Login.
-								</p>
-								<p>
-									Server-Umgebung: zum Aktivieren
-									<code class="bg-muted mx-0.5 rounded px-1 py-0.5 font-mono text-xs">ALLOW_DEV_LOGIN</code>
-									auf
-									<code class="bg-muted rounded px-1 py-0.5 font-mono text-xs">true</code>,
-									<code class="bg-muted rounded px-1 py-0.5 font-mono text-xs">1</code> oder
-									<code class="bg-muted rounded px-1 py-0.5 font-mono text-xs">yes</code>
-									setzen; mit
-									<code class="bg-muted mx-0.5 rounded px-1 py-0.5 font-mono text-xs">false</code>
-									oder ohne explizite Variable bleibt der Weg aus.{#if cfg.devLogin.passwordRequired}
-										Das Passwortfeld unten entspricht
-										<code class="bg-muted rounded px-1 py-0.5 font-mono text-xs">DEV_LOGIN_PASSWORD</code>.
-									{:else}
-										Über
-										<code class="bg-muted mx-0.5 rounded px-1 py-0.5 font-mono text-xs"
-											>DEV_LOGIN_PASSWORD</code
-										>
-										erzwingen Sie eine zusätzliche Abfrage vor dem Login.
-									{/if}
-								</p>
-							</div>
-						</details>
 					</CardHeader>
-					<CardContent class="flex flex-col gap-4">
+					<CardContent class="flex flex-col gap-3 pt-3">
 						<FormSelect id="role" label="Rolle" bind:value={devRole} options={roleOptions} />
 						{#if cfg.devLogin.passwordRequired}
 							<div class="grid gap-2">
-								<Label for="devpw">Entwickler-Passwort</Label>
+								<Label for="devpw">Passwort</Label>
 								<Input id="devpw" type="password" bind:value={devPassword} autocomplete="off" />
 							</div>
 						{/if}
 						<Button disabled={busy} variant="secondary" class="w-full sm:w-auto" onclick={loginDev}>
-							{busy ? 'Anmeldung läuft …' : 'Als Entwickler anmelden'}
+							{busy ? 'Wird angemeldet …' : 'Lokal anmelden'}
 						</Button>
 					</CardContent>
 				</Card>
 			{/if}
 
 			{#if !(openPortfolioDemo && cfg && !cfg.clientId)}
-				<Card class="shadow-md ring-1 ring-black/[0.03] dark:ring-white/[0.06]">
-					<CardHeader class="pb-2">
-						<CardTitle class="text-lg">Microsoft Entra ID</CardTitle>
-						<CardDescription class="leading-relaxed">
-							Organisationskonto per MSAL-Popup. App-Registrierung in Entra ID, Redirect-URI und
-							Netzwerkzugriff müssen zur Umgebung passen.
+				<Card class="border-border shadow-sm">
+					<CardHeader class="space-y-1.5 pb-0">
+						<CardTitle class="text-base font-medium">Microsoft Entra ID</CardTitle>
+						<CardDescription class="text-sm leading-snug">
+							Anmeldung mit Organisationskonto (Popup). Redirect-URI und App-Registrierung müssen zur
+							Umgebung passen.
 						</CardDescription>
 					</CardHeader>
-					<CardContent class="flex flex-col gap-4">
+					<CardContent class="flex flex-col gap-2 pt-3">
 						<Button disabled={busy || !cfg?.clientId} class="w-full sm:w-auto" onclick={loginMicrosoft}>
-							{busy ? 'Anmeldung läuft …' : 'Mit Microsoft anmelden'}
+							{busy ? 'Wird angemeldet …' : 'Mit Microsoft anmelden'}
 						</Button>
 						{#if cfg && !cfg.clientId}
 							<p class="text-muted-foreground text-sm">
@@ -252,19 +215,17 @@
 			{/if}
 		</div>
 
-		<p class="text-muted-foreground mx-auto max-w-md text-center text-[11px] leading-snug">
-			<a class="text-primary underline-offset-2 hover:underline" href="/impressum">Impressum</a>
-			<span aria-hidden="true"> · </span>
-			<a class="text-primary underline-offset-2 hover:underline" href="/datenschutz">Datenschutz</a>
-			<span aria-hidden="true"> · </span>
-			<a class="text-primary underline-offset-2 hover:underline" href="/nutzungsbedingungen"
-				>Nutzungsbedingungen</a
-			>
-		</p>
-
-		<p class="text-muted-foreground mx-auto max-w-md text-center text-[11px] leading-snug">
-			Hochgeladene Installer und erzeugte Skripte nur im Rahmen gültiger Lizenzen nutzen; keine Schadsoftware
-			einbinden.
-		</p>
+		<div class="text-muted-foreground space-y-2 text-center text-[11px] leading-snug">
+			<nav class="flex flex-wrap justify-center gap-x-3 gap-y-1">
+				<a class="text-primary underline-offset-2 hover:underline" href="/impressum">Impressum</a>
+				<a class="text-primary underline-offset-2 hover:underline" href="/datenschutz">Datenschutz</a>
+				<a class="text-primary underline-offset-2 hover:underline" href="/nutzungsbedingungen"
+					>Nutzungsbedingungen</a
+				>
+			</nav>
+			<p class="mx-auto max-w-md">
+				Installer und Skripte nur mit gültigen Rechten verwenden; keine Schadsoftware einbinden.
+			</p>
+		</div>
 	</main>
 </div>

@@ -17,21 +17,13 @@
 	import { SECTION_PERMISSIONS } from '$lib/app/section-permissions';
 	import { authHeaders } from '$lib/client/api-fetch';
 	import { apiRoutes } from '$lib/client/api-routes';
-	import {
-		clearAuth,
-		hasPermission,
-		type SessionUser,
-		sessionUser,
-		setSessionUser
-	} from '$lib/client/session-user';
+	import { clearAuth, hasPermission, sessionUser } from '$lib/client/session-user';
 	import AppCommandPalette from '$lib/components/app-command-palette.svelte';
 	import AppDirtyNavDialog from '$lib/components/app-dirty-nav-dialog.svelte';
-	import AppGithubRepoLink from '$lib/components/app-github-repo-link.svelte';
 	import AppShellDesktopSidebar from '$lib/components/app-shell-desktop-sidebar.svelte';
 	import AppShellMobileNav from '$lib/components/app-shell-mobile-nav.svelte';
 	import AppShellMobileTopbar from '$lib/components/app-shell-mobile-topbar.svelte';
 	import type { NavGroup } from '$lib/components/app-shell-types';
-	import PortfolioDemoBanner from '$lib/components/portfolio-demo-banner.svelte';
 	import * as Sheet from '$lib/components/ui/sheet/index';
 	import type { HelpLink } from '$lib/types/help-link';
 
@@ -97,8 +89,6 @@
 		($sessionUser?.displayName ?? '').trim() || ($sessionUser?.role ?? '').trim()
 	);
 	const portfolioGuest = $derived($sessionUser?.role === 'PortfolioGast');
-	const showPortfolioBanner = $derived(openPortfolioDemo && portfolioGuest);
-	const footerLogoutLabel = $derived(openPortfolioDemo && portfolioGuest ? 'Demo neu starten' : 'Abmelden');
 	const authed = $derived($sessionUser != null);
 
 	const commandPaletteGroups = $derived(
@@ -194,14 +184,6 @@
 			: 'text-muted-foreground hover:bg-muted/80 hover:text-foreground';
 	}
 
-	async function rebootstrapPortfolioGuest(): Promise<void> {
-		await fetch(apiRoutes.csrfToken, { credentials: 'same-origin' });
-		const r = await fetch(apiRoutes.auth.me, { credentials: 'same-origin' });
-		if (!r.ok) return;
-		const d = (await r.json()) as { user?: unknown };
-		if (d.user) setSessionUser(d.user as SessionUser);
-	}
-
 	async function logout() {
 		if ($sessionUser) {
 			await fetch(apiRoutes.auth.logout, {
@@ -211,11 +193,6 @@
 			});
 		}
 		clearAuth();
-		if (openPortfolioDemo) {
-			await rebootstrapPortfolioGuest();
-			await goto('/welcome');
-			return;
-		}
 		await goto('/login');
 	}
 
@@ -231,14 +208,6 @@
 		>Zum Hauptinhalt springen</a
 	>
 	{#if authed}
-		<div class="pointer-events-none fixed top-3 right-3 z-[55] hidden md:block">
-			<div class="pointer-events-auto">
-				<AppGithubRepoLink />
-			</div>
-		</div>
-	{/if}
-
-	{#if authed}
 		<AppShellMobileNav
 			open={mobileOpen}
 			{navGroups}
@@ -250,7 +219,6 @@
 			{sessionRole}
 			{openPortfolioDemo}
 			{portfolioGuest}
-			{footerLogoutLabel}
 			onClose={() => (mobileOpen = false)}
 			onLogout={logout}
 			onInviteLogin={goToInviteLogin}
@@ -264,7 +232,6 @@
 			{dark}
 			{openPortfolioDemo}
 			{portfolioGuest}
-			{footerLogoutLabel}
 			onOpenShortcuts={() => (shortcutsOpen = true)}
 			onOpenCommandPalette={() => (commandPaletteOpen = true)}
 			onToggleTheme={toggleTheme}
@@ -292,9 +259,6 @@
 			/>
 		{/if}
 		<div class="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain">
-			{#if showPortfolioBanner}
-				<PortfolioDemoBanner />
-			{/if}
 			{@render children()}
 		</div>
 	</main>
