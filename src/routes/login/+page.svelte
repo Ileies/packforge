@@ -95,6 +95,7 @@
 
 <svelte:head>
 	<title>Anmelden — {PRODUCT_NAME}</title>
+	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
 <div class="app-main-surface relative flex min-h-screen flex-col">

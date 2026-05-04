@@ -53,6 +53,7 @@
 </script>
 
 <svelte:head>
+	<meta name="robots" content="noindex, nofollow" />
 	{#if sessionGate === 'loading'}
 		<title>Laden — {PRODUCT_NAME}</title>
 	{/if}
